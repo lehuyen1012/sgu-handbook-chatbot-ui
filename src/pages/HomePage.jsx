@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import Spline from "@splinetool/react-spline";
+import TapeSection from "../components/TapeSection";
+import Footer from "../components/footer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 function HomePage() {
     return (
-        <div className="flex items-center justify-center hero h-[85vh] w-full ">
-            <div className="hero-content text-center min-w-[200px] flex flex-row-reverse items-center h-full">
+        <div className="flex flex-col items-center justify-center hero-full ">
+            <div className=" h-[85vh] hero-content text-center min-w-[200px] flex flex-col-reverse md:flex-row-reverse items-center w-full">
                 <div className="flex-1 w-full h-full relative overflow-hidden">
                     <Spline
                         className="w-full h-full object-cover hide-footer"
@@ -12,21 +16,34 @@ function HomePage() {
                     />
                 </div>
 
-                <div className="flex-1 text-center lg:text-left p-4">
-                    <h1 className="text-2xl lg:text-5xl font-bold [&::selection]:text-base-content brightness-100 contrast-150 [&::selection]:bg-blue-950 ">
+                <div className="flex-1 text-center justify-center md:text-left pt-20">
+                    <h1 className="text-4xl lg:text-6xl font-bold [&::selection]:text-base-content brightness-100 contrast-150 [&::selection]:bg-blue-950">
                         Xin chào! Mình là
                     </h1>
-                    <h1 className="text-3xl lg:text-5xl font-bold text-[#42A7C3] mt-1 lg:mt-3">
+                    <h1 className="text-6xl sm:text-7xl md:text-5xl lg:text-7xl xl:text-8xl font-bold text-[#42A7C3] mt-1 lg:mt-3">
                         SGU Chatbot
                     </h1>
-                    <p className="py-6 font-semibold lg:text-lg text-sm ">
+                    <p className="px-4 md:px-2 py-6 font-semibold text-xl lg:text-2xl">
                         Giúp các bạn sinh viên giải đáp thắc mắc, tra cứu thông
                         tin một cách nhanh chóng và chính xác nhất!
                     </p>
                     <Link to="/chat">
-                        <button className="btn btn-info">Tra cứu ngay</button>
+                        <button className="btn btn-info gap-2">
+                            <span>Tra cứu ngay</span>
+                            <FontAwesomeIcon
+                                icon={faArrowRight}
+                                width="24"
+                                height="24"
+                            />
+                        </button>
                     </Link>
                 </div>
+            </div>
+            <div className="w-full flex justify-center items-center pt-10">
+                <TapeSection />
+            </div>
+            <div className="w-full flex justify-center items-center pt-10">
+                <Footer />
             </div>
         </div>
     );

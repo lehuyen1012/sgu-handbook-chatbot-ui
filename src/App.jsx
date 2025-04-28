@@ -4,8 +4,8 @@ import NavBar from "./components/NavBar";
 import HomePage from "./pages/HomePage";
 import ChatBot from "./components/ChatBot";
 import FAQPage from "./pages/FAQPage";
+import LoginPage from "./pages/LoginPage";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import ScaleLoader from "react-spinners/ScaleLoader";
 
 function App() {
     useEffect(() => {}, []);
@@ -18,6 +18,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="chat" element={<ChatBot />} />
                     <Route path="faq" element={<FAQPage />} />
+                    <Route path="signin" element={<LoginPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

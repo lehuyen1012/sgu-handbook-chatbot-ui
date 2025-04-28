@@ -5,12 +5,14 @@
 :root {
     --primary: #f0f0f0;
     --secondary: #93e7fb;
+    --light-blue: #70bed3;
+    --text-color: #ffffff;
 }
 body {
     background: linear-gradient(to bottom, #e2f6fc 14%, #ffffff 100%);
     margin: 0;
     padding: 0;
-    font-family: poppins;
+    font-family: "Poppins", sans-serif;
 }
 
 *::-webkit-scrollbar-track {

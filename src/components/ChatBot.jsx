@@ -1,5 +1,4 @@
-// import avatar from "../assets/avatar.jpg";
-import robot_img from "../assets/robot_image.png";
+import sgu_img from "../assets/sgu_img.png";
 import { useState, useRef, useEffect } from "react";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { TypeAnimation } from "react-type-animation";
@@ -18,7 +17,6 @@ function ChatBot(props) {
         "Bao nhiêu điểm thì học lực Giỏi?",
         "Bao nhiêu điểm thì học lực Khá?",
         "Điều kiện thực tập tốt nghiệp là gì?",
-        "Học phần đã đăng ký có trạng thái N* là gì?",
         "Điều kiện nào để được xét chuyển trường?",
         "Lệ phí cấp bảng điểm là bao nhiêu?",
         "Nếu điểm thi kết thúc học phần < 4 thì như thế nào?",
@@ -114,17 +112,63 @@ function ChatBot(props) {
         }
     }
 
+    async function sendCommonQuestion(message) {
+        if (message !== "" && isLoading === false) {
+            SetTimeOfRequest(0);
+            SetIsGen(true);
+            SetPromptInput(""); // clear luôn ô input
+            SetIsLoad(true);
+
+            // Hiện câu hỏi của user ngay trong khung chat
+            SetDataChat((prev) => [...prev, ["end", [message, sourceData]]]);
+            SetChatHistory((prev) => [message, ...prev]);
+
+            try {
+                const response = await fetch(
+                    "https://b053-34-125-52-252.ngrok-free.app/api/ask",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "ngrok-skip-browser-warning": "69420",
+                        },
+                        body: JSON.stringify({
+                            question: message.toString(),
+                        }),
+                    }
+                );
+
+                const result = await response.json();
+
+                SetDataChat((prev) => [
+                    ...prev,
+                    ["start", [result.answer, "", sourceData]],
+                ]);
+            } catch (error) {
+                console.error("Error:", error);
+                SetDataChat((prev) => [
+                    ...prev,
+                    ["start", ["Lỗi, không thể kết nối với server", null]],
+                ]);
+            } finally {
+                SetIsLoad(false);
+            }
+        }
+    }
+
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
             SendMessageChat();
         }
     };
+
     let [reference, SetReference] = useState({
         title: "",
         source: "",
         url: "",
         text: ``,
     });
+
     const handleReferenceClick = (sources, sourceType) => {
         SetReference({
             title:
@@ -137,7 +181,7 @@ function ChatBot(props) {
             url:
                 sourceType == "wiki"
                     ? sources.metadata.source
-                    : "https://ctsv.ntt.edu.vn/sinh-vien-can-biet/",
+                    : "https://ctsv.sgu.edu.vn/dd/trai/stsv.php",
             text:
                 sourceType == "wiki"
                     ? sources.metadata.summary
@@ -145,10 +189,53 @@ function ChatBot(props) {
         });
     };
     console.log(dataChat);
+
     return (
         <div className=" h-[85vh] w-full">
-            <div className="hidden lg:block  drawer-side absolute w-64 h-[20vh] left-3 mt-2 drop-shadow-md">
-                <div className="menu p-4 w-full min-h-full bg-gray-50 text-base-content rounded-2xl mt-3  overflow-auto scroll-y-auto max-h-[80vh]">
+            <div className="hidden lg:block lg:w-[30%] xl:w-[25%] 2xl:w-[20%]   drawer-side absolute left-3 mt-2 drop-shadow-md px-10">
+                <div className="menu p-4 w-full min-h-full bg-gray-50 text-base-content rounded-2xl mt-3">
+                    {/* Nguon tham khao va lich su tro chuyen */}
+                    <h2 className="font-bold text-sm mb-2 text-black">
+                        Nguồn tham khảo
+                    </h2>
+                    <ul className="menu">
+                        <li>
+                            <label className="label cursor-pointer">
+                                <span className="label-text font-medium text-gray-500">
+                                    Bách khoa toàn thư Wikipedia
+                                </span>
+                                <input
+                                    type="radio"
+                                    name="radio-10"
+                                    value={"wiki"}
+                                    checked={sourceData === "wiki"}
+                                    onChange={(e) => {
+                                        SetSourceData(e.target.value);
+                                    }}
+                                    className="radio checked:bg-[var(--light-blue)]"
+                                />
+                            </label>
+                        </li>
+                        <li>
+                            <label className="label cursor-pointer">
+                                <span className="label-text font-medium text-gray-500">
+                                    Đại học Sài Gòn
+                                </span>
+                                <input
+                                    value={"sgu"}
+                                    type="radio"
+                                    checked={sourceData === "sgu"}
+                                    onChange={(e) => {
+                                        SetSourceData(e.target.value);
+                                    }}
+                                    name="radio-10"
+                                    className="radio checked:bg-[var(--light-blue)]"
+                                />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div className="menu p-4 w-full min-h-full bg-gray-50 text-base-content rounded-2xl mt-3 overflow-auto scroll-y-auto max-h-[80vh]">
                     {/* Sidebar content here */}
                     <ul className="menu text-sm">
                         <h2 className="font-bold mb-2 text-black">
@@ -174,65 +261,29 @@ function ChatBot(props) {
                     </ul>
                 </div>
             </div>
-            <div className="hidden lg:block  drawer-side absolute w-64 h-[20vh] mt-2 right-3 drop-shadow-md">
-                <div className="menu p-4 w-full min-h-full bg-gray-50 text-base-content rounded-2xl mt-3">
-                    {/* Sidebar content here */}
-                    <h2 className="font-bold text-sm mb-2 text-black">
-                        Nguồn tham khảo
-                    </h2>
-                    <ul className="menu">
-                        <li>
-                            <label className="label cursor-pointer">
-                                <span className="label-text font-medium text-gray-500">
-                                    Bách khoa toàn thư Wikipedia
-                                </span>
-                                <input
-                                    type="radio"
-                                    name="radio-10"
-                                    value={"wiki"}
-                                    checked={sourceData === "wiki"}
-                                    onChange={(e) => {
-                                        SetSourceData(e.target.value);
-                                    }}
-                                    className="radio checked:bg-blue-500"
-                                />
-                            </label>
-                        </li>
-                        <li>
-                            <label className="label cursor-pointer">
-                                <span className="label-text font-medium text-gray-500">
-                                    Đại học Sài Gòn
-                                </span>
-                                <input
-                                    value={"sgu"}
-                                    type="radio"
-                                    checked={sourceData === "sgu"}
-                                    onChange={(e) => {
-                                        SetSourceData(e.target.value);
-                                    }}
-                                    name="radio-10"
-                                    className="radio checked:bg-blue-500"
-                                />
-                            </label>
-                        </li>
-                    </ul>
-                </div>
+
+            <div className="hidden lg:block lg:w-[30%] xl:w-[25%] 2xl:w-[20%]  drawer-side absolute mt-2 right-3 drop-shadow-md px-10">
                 <div
-                    className="menu p-4 w-full min-h-full bg-gray-50 text-base-content 
-        rounded-2xl mt-3  overflow-auto scroll-y-auto max-h-[43vh]
+                    className="menu p-4 min-h-full bg-gray-50 text-base-content 
+        rounded-2xl mt-3  overflow-auto scroll-y-auto max-h-[80vh]
         scrollbar-thin scrollbar-thumb-gray-300 
           scrollbar-thumb-rounded-full scrollbar-track-rounded-full
         "
                 >
                     {/* Sidebar content here */}
                     <ul className="menu text-sm">
-                        <h2 className="font-bold mb-2 bg-[linear-gradient(90deg,hsl(var(--s))_0%,hsl(var(--sf))_9%,hsl(var(--pf))_42%,hsl(var(--p))_47%,hsl(var(--a))_100%)] bg-clip-text will-change-auto [-webkit-text-fill-color:transparent] [transform:translate3d(0,0,0)] motion-reduce:!tracking-normal max-[1280px]:!tracking-normal [@supports(color:oklch(0_0_0))]:bg-[linear-gradient(90deg,hsl(var(--s))_4%,color-mix(in_oklch,hsl(var(--sf)),hsl(var(--pf)))_22%,hsl(var(--p))_45%,color-mix(in_oklch,hsl(var(--p)),hsl(var(--a)))_67%,hsl(var(--a))_100.2%)] ">
+                        <h2 className="font-bold mb-2 text-black">
                             Những câu hỏi phổ biến
                         </h2>
 
                         {commonQuestions.map((mess, i) => (
-                            <li key={i} onClick={() => SetPromptInput(mess)}>
-                                <p className="max-w-64">
+                            <li
+                                key={i}
+                                onClick={() => {
+                                    sendCommonQuestion(mess);
+                                }}
+                            >
+                                <p className="">
                                     <FontAwesomeIcon icon={faMessage} />
                                     {mess}
                                     {/* {mess.length < 20 ? mess : mess.slice(0, 20) + "..."} */}
@@ -281,7 +332,7 @@ function ChatBot(props) {
           mt-5 text-sm 
           scrollbar-thin scrollbar-thumb-gray-300 bg-white  
           scrollbar-thumb-rounded-full scrollbar-track-rounded-full
-          rounded-3xl border-2 md:w-[50%] md:p-3 p-1  w-full overflow-auto scroll-y-auto h-[80%] "
+          rounded-3xl border-2 w-[80%] lg:w-[40%] xl:w-[50%] 2xl:w-[60%] md:p-3 p-1 overflow-auto scroll-y-auto h-[80%] "
                 >
                     {dataChat.map((dataMessages, i) =>
                         dataMessages[0] === "start" ? (
@@ -290,10 +341,10 @@ function ChatBot(props) {
                                 key={i}
                             >
                                 <div className="chat-image avatar">
-                                    <div className="w-10 rounded-full border-2 border-blue-500">
+                                    <div className="w-10 rounded-full border-2 border-[var(--light-blue)]">
                                         <img
                                             className="scale-150"
-                                            src={robot_img}
+                                            src={sgu_img}
                                         />
                                     </div>
                                 </div>
@@ -367,12 +418,11 @@ function ChatBot(props) {
                             </div>
                         ) : (
                             <div className="chat chat-end mt-3">
-                                {/* bg-gradient-to-r from-cyan-500 to-blue-500 */}
                                 <div
                                     className="chat-bubble shadow-xl chat-bubble-primary text-white"
                                     style={{
                                         background:
-                                            "linear-gradient(to bottom, #06b6d4, #3b82f6)", // cyan-500 => #06b6d4, blue-500 => #3b82f6
+                                            "linear-gradient(to bottom, #06b6d4, #3b82f6)",
                                     }}
                                 >
                                     {dataMessages[1][0]}
@@ -392,8 +442,8 @@ function ChatBot(props) {
                     {isLoading ? (
                         <div className="chat chat-start">
                             <div className="chat-image avatar">
-                                <div className="w-10 rounded-full border-2 border-blue-500">
-                                    <img src={robot_img} />
+                                <div className="w-10 rounded-full border-2 border-[var(--light-blue)]">
+                                    <img src={sgu_img} />
                                 </div>
                             </div>
                             <div className="chat-bubble chat-bubble-info">
@@ -414,7 +464,7 @@ function ChatBot(props) {
                         ""
                     )}
                     <div ref={messagesEndRef} />
-                    <div className="absolute bottom-[0.2rem] md:w-[50%] grid ">
+                    <div className="absolute bottom-[0.2rem] grid w-[80%] lg:w-[40%] xl:w-[50%] 2xl:w-[60%] ">
                         <input
                             type="text"
                             placeholder="Nhập câu hỏi tại đây..."

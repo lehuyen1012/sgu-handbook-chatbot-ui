@@ -1,10 +1,11 @@
 import { useLocation, useNavigate, Link } from "react-router-dom";
+
 function NavBar() {
     const navigate = useNavigate();
     const location = useLocation();
     return (
         <div
-            className="navbar bg-base-100 w-full px-8"
+            className="navbar bg-base-100 w-full px-8 py-4"
             style={{
                 background: "rgba(255, 255, 255, 0)",
             }}
@@ -55,7 +56,7 @@ function NavBar() {
                 </div>
                 <a
                     onClick={() => navigate("/")}
-                    className=" btn btn-ghost normal-case font-extrabold text-xl text-[#42A7C3]"
+                    className="font-serif btn btn-ghost normal-case font-extrabold text-xl text-[#42A7C3]"
                 >
                     SGU Chatbot
                 </a>
@@ -101,9 +102,16 @@ function NavBar() {
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn btn-outline btn-primary md:flex hidden">
+                <button
+                    onClick={() => navigate("/signin")}
+                    className={
+                        location.pathname == "/signin"
+                            ? "btn btn-outline btn-primary"
+                            : ""
+                    }
+                >
                     Đăng nhập
-                </a>
+                </button>
             </div>
         </div>
     );

@@ -37,34 +37,6 @@ function FAQPage() {
                         </div>
                     </div>
                 ))}
-
-                {/* <div className="mt-2 collapse collapse-plus shadow-md rounded-xl bg-white">
-          <input type="checkbox" />
-          <div className="collapse-title text-base font-medium">
-            Cách sử dụng chatbot để tra cứu thông tin
-          </div>
-          <div className="collapse-content">
-            <p>hello</p>
-          </div>
-        </div>
-        <div className="mt-2 collapse collapse-plus shadow-md rounded-xl bg-white">
-          <input type="checkbox" />
-          <div className="collapse-title text-base font-medium">
-          Thông tin từ chatbot có đáng tin cậy không?
-          </div>
-          <div className="collapse-content">
-            <p>hello</p>
-          </div>
-        </div>
-        <div className="mt-2 collapse collapse-plus shadow-md rounded-xl bg-white">
-          <input type="checkbox" />
-          <div className="collapse-title text-base font-medium">
-          Tôi có thể liên hệ hỗ trợ như thế nào?
-          </div>
-          <div className="collapse-content">
-            <p>hello</p>
-          </div>
-        </div> */}
             </div>
         </div>
     );
