@@ -75,7 +75,7 @@ function ChatBot(props) {
             //         }),
             //     }
             // )
-            fetch("https://b053-34-125-52-252.ngrok-free.app/api/ask", {
+            fetch("https://bef7-35-229-159-193.ngrok-free.app/api/ask", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -93,8 +93,7 @@ function ChatBot(props) {
                             "start",
                             [
                                 result.answer,
-                                // result.source_documents,
-                                "",
+                                result.source_documents,
                                 sourceData,
                             ],
                         ],
@@ -167,25 +166,27 @@ function ChatBot(props) {
         source: "",
         url: "",
         text: ``,
+        keywords: [],
     });
 
     const handleReferenceClick = (sources, sourceType) => {
         SetReference({
             title:
                 sourceType == "wiki"
-                    ? sources.metadata.title
-                    : sources.metadata.page == undefined
+                    ? sources.title
+                    : sources.page == undefined
                     ? "Sổ tay sinh viên 2023"
-                    : "Trang " + sources.metadata.page + " (sổ tay SV)",
+                    : "Trang " + sources.page + " (sổ tay SV)",
             source: sourceType == "wiki" ? "Wikipedia" : "Đại học Sài Gòn ",
             url:
                 sourceType == "wiki"
-                    ? sources.metadata.source
+                    ? sources.source
                     : "https://ctsv.sgu.edu.vn/dd/trai/stsv.php",
             text:
                 sourceType == "wiki"
-                    ? sources.metadata.summary
-                    : sources.page_content,
+                    ? sources.summary
+                    : sources.content,
+            keywords: sources.keywords,
         });
     };
     console.log(dataChat);
@@ -310,6 +311,16 @@ function ChatBot(props) {
                         <p className="py-4 text-sm">
                             {reference.text.slice(0, 700) + "..."}
                         </p>
+                        {reference.keywords && reference.keywords.length > 0 && (
+                            <div className="my-2">
+                                <p className="font-semibold text-sm">Từ khóa:</p>
+                                <ul className="list-disc list-inside text-sm">
+                                    {reference.keywords.map((keyword, index) => (
+                                        <li key={index}>{keyword}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                         <p className="link link-primary truncate">
                             <a href={reference.url} target="_blank">
                                 {reference.url}
