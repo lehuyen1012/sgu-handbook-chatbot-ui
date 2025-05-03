@@ -9,6 +9,7 @@ function ChatBot(props) {
     const [timeOfRequest, SetTimeOfRequest] = useState(0);
     let [promptInput, SetPromptInput] = useState("");
     let [chatHistory, SetChatHistory] = useState([]);
+    const API_URL = "https://5e81-34-81-163-149.ngrok-free.app/api/ask";
 
     const commonQuestions = [
         "Điều kiện nhận học bổng?",
@@ -33,7 +34,6 @@ function ChatBot(props) {
             ],
         ],
     ]);
-    const [sourceDocs, setSourceDocs] = useState([]);
     useEffect(() => {
         ScrollToEndChat();
     }, [isLoading]);
@@ -51,7 +51,7 @@ function ChatBot(props) {
         SetPromptInput(event.target.value);
     };
 
-    async function SendMessageChat() {
+    async function SendMessageChat(promptInput) {
         if (promptInput !== "" && isLoading === false) {
             SetTimeOfRequest(0);
             SetIsGen(true), SetPromptInput("");
@@ -59,23 +59,13 @@ function ChatBot(props) {
             SetDataChat((prev) => [...prev, ["end", [promptInput]]]);
             SetChatHistory((prev) => [promptInput, ...prev]);
 
-            // fetch(
-            //     "https://toad-vast-civet.ngrok-free.app/rag/" +
-            //         sourceData +
-            //         "?q=" +
-            //         promptInput,
-            //     {
-            //         method: "get",
-            //         headers: new Headers({
-            //             "ngrok-skip-browser-warning": "69420",
-            //         }),
-            //     }
-            // )
-            fetch("https://bef7-35-229-159-193.ngrok-free.app/api/ask", {
+            // Hiện câu hỏi của user ngay trong khung chat
+            fetch(API_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "ngrok-skip-browser-warning": "69420",
+                    "Access-Control-Allow-Origin": "*",
                 },
                 body: JSON.stringify({
                     question: promptInput.toString(),
@@ -83,8 +73,16 @@ function ChatBot(props) {
             })
                 .then((response) => response.json())
                 .then((result) => {
-                    SetDataChat((prev) => [...prev, ["start", [result.answer]]]);
-                    setSourceDocs(result.source_documents ?? []);
+                    SetDataChat((prev) => [
+                        ...prev,
+                        [
+                            "start",
+                            [
+                                result.answer,
+                                result?.source_documents ? result.source_documents : [],
+                            ],
+                        ],
+                    ]);
                     SetIsLoad(false);
                 })
                 .catch((error) => {
@@ -111,12 +109,13 @@ function ChatBot(props) {
 
             try {
                 const response = await fetch(
-                    "https://b053-34-125-52-252.ngrok-free.app/api/ask",
+                    API_URL,
                     {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             "ngrok-skip-browser-warning": "69420",
+                            "Access-Control-Allow-Origin": "*",
                         },
                         body: JSON.stringify({
                             question: message.toString(),
@@ -208,7 +207,7 @@ function ChatBot(props) {
                             <li
                                 key={i}
                                 onClick={() => {
-                                    sendCommonQuestion(mess);
+                                    SendMessageChat(mess);
                                 }}
                             >
                                 <p className="">
@@ -229,9 +228,7 @@ function ChatBot(props) {
                     <div className="modal-box">
                         <h3 className="font-bold text-lg">{reference.title}</h3>{" "}
                         <p className="font-normal text-sm">Nguồn: {reference.source}</p>
-                        <p className="py-4 text-sm">
-                            {reference.text.slice(0, 700) + "..."}
-                        </p>
+                        <p className="py-4 text-sm">{reference.text}</p>
                         {reference.keywords && reference.keywords.length > 0 && (
                             <div className="my-2">
                                 <p className="font-semibold text-sm">Từ khóa:</p>
@@ -295,12 +292,12 @@ function ChatBot(props) {
                                         // wrapper="span"
                                         speed={100}
                                     />
-                                    {i !== 0 && sourceDocs.length > 0 && (
+                                    {i !== 0 && dataMessages[1][1]?.length > 0 && (
                                         <>
                                             <div className="divider m-0"></div>
                                             <p className="font-semibold text-xs">
                                                 Tham khảo:{" "}
-                                                {sourceDocs.map((source, index) => (
+                                                {dataMessages[1][1].map((source, index) => (
                                                     <label
                                                         htmlFor="my_modal_6"
                                                         className="kbd kbd-xs mr-1 hover:bg-sky-300 cursor-pointer"
@@ -370,7 +367,7 @@ function ChatBot(props) {
 
                         <button
                             disabled={isGen}
-                            onClick={() => SendMessageChat()}
+                            onClick={() => SendMessageChat(promptInput)}
                             className={
                                 " drop-shadow-md md:col-start-12 rounded-2xl col-start-11 col-end-12 md:col-end-13 btn btn-active btn-primary btn-square bg-gradient-to-tl from-transparent via-blue-600 to-indigo-500"
                             }
