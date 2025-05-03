@@ -50,7 +50,7 @@ function ChatBot(props) {
     SetPromptInput(event.target.value);
   };
 
-  async function SendMessageChat() {
+  async function SendMessageChat(promptInput) {
     if (promptInput !== "" && isLoading === false) {
       SetTimeOfRequest(0);
       SetIsGen(true), SetPromptInput("");
@@ -70,11 +70,12 @@ function ChatBot(props) {
       //         }),
       //     }
       // )
-      fetch("https://5717-34-81-163-149.ngrok-free.app/api/ask", {
+      fetch("https://5e81-34-81-163-149.ngrok-free.app/api/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "69420",
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
           question: promptInput.toString(),
@@ -118,12 +119,13 @@ function ChatBot(props) {
 
       try {
         const response = await fetch(
-          "https://5717-34-81-163-149.ngrok-free.app/api/ask",
+          "https://d27c-34-81-163-149.ngrok-free.app/api/ask",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "ngrok-skip-browser-warning": "69420",
+              "Access-Control-Allow-Origin": "*",
             },
             body: JSON.stringify({
               question: message.toString(),
@@ -215,7 +217,7 @@ function ChatBot(props) {
               <li
                 key={i}
                 onClick={() => {
-                  sendCommonQuestion(mess);
+                  SendMessageChat(mess);
                 }}
               >
                 <p className="">
@@ -375,7 +377,7 @@ function ChatBot(props) {
 
             <button
               disabled={isGen}
-              onClick={() => SendMessageChat()}
+              onClick={() => SendMessageChat(promptInput)}
               className={
                 " drop-shadow-md md:col-start-12 rounded-2xl col-start-11 col-end-12 md:col-end-13 btn btn-active btn-primary btn-square bg-gradient-to-tl from-transparent via-blue-600 to-indigo-500"
               }
