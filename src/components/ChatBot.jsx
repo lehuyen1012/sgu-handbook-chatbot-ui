@@ -14,7 +14,7 @@ function ChatBot(props) {
     const API_URL = "https://5e81-34-81-163-149.ngrok-free.app/api/ask";
 
     const commonQuestions = [
-        "Điều kiện để sinh viênviên nhận học bổng?",
+        "Điều kiện để sinh viên nhận học bổng?",
         "Học phí ngành công nghệ thông tin?",
         "Quy trình xét tốt nghiệp như thế nào?",
         "Các ngành học tại trường là gì?",
@@ -48,7 +48,9 @@ function ChatBot(props) {
     };
 
     async function SendMessageChat(promptInput) {
-        if (promptInput !== "" && isLoading === false) {
+        if (promptInput !== "" &&
+            promptInput !== undefined &&
+            isLoading === false) {
             SetTimeOfRequest(0);
             SetIsGen(true), SetPromptInput("");
             SetIsLoad(true);
@@ -91,45 +93,6 @@ function ChatBot(props) {
                     SetIsLoad(false);
                     console.error("Error:", error);
                 });
-        }
-    }
-
-    async function sendCommonQuestion(message) {
-        if (message !== "" && isLoading === false) {
-            SetTimeOfRequest(0);
-            SetIsGen(true);
-            SetPromptInput(""); // clear luôn ô input
-            SetIsLoad(true);
-
-            // Hiện câu hỏi của user ngay trong khung chat
-            SetDataChat((prev) => [...prev, ["end", [message]]]);
-            SetChatHistory((prev) => [message, ...prev]);
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "69420",
-                        "Access-Control-Allow-Origin": "*",
-                    },
-                    body: JSON.stringify({
-                        question: message.toString(),
-                    }),
-                });
-
-                const result = await response.json();
-
-                SetDataChat((prev) => [...prev, ["start", [result.answer]]]);
-            } catch (error) {
-                console.error("Error:", error);
-                SetDataChat((prev) => [
-                    ...prev,
-                    ["start", ["Lỗi, không thể kết nối với server"]],
-                ]);
-            } finally {
-                SetIsLoad(false);
-            }
         }
     }
 
