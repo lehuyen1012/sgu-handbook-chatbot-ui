@@ -1,8 +1,11 @@
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useUser, UserButton } from "@clerk/clerk-react";
 
 function NavBar() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { isSignedIn, user } = useUser();
+
     return (
         <div
             className="navbar bg-base-100 w-full px-8 py-4"
@@ -33,24 +36,13 @@ function NavBar() {
                         className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                     >
                         <li>
-                            <Link to="/">
-                                <a>Trang chủ</a>
-                            </Link>
+                            <Link to="/">Trang chủ</Link>
                         </li>
                         <li>
-                            <Link to="/chat">
-                                <a>Trò chuyện</a>
-                            </Link>
+                            <Link to="/chat">Trò chuyện</Link>
                         </li>
                         <li>
-                            <Link to="/faq">
-                                <a>FAQs</a>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/sigin">
-                                <a>Đăng nhập</a>
-                            </Link>
+                            <Link to="/faq">FAQs</Link>
                         </li>
                     </ul>
                 </div>
@@ -67,7 +59,7 @@ function NavBar() {
                         <button
                             onClick={() => navigate("/")}
                             className={
-                                location.pathname == "/"
+                                location.pathname === "/"
                                     ? "btn btn-outline btn-primary"
                                     : ""
                             }
@@ -79,7 +71,7 @@ function NavBar() {
                         <button
                             onClick={() => navigate("/chat")}
                             className={
-                                location.pathname == "/chat"
+                                location.pathname === "/chat"
                                     ? "btn btn-outline btn-primary"
                                     : ""
                             }
@@ -91,7 +83,7 @@ function NavBar() {
                         <button
                             onClick={() => navigate("/faq")}
                             className={
-                                location.pathname == "/faq"
+                                location.pathname === "/faq"
                                     ? "btn btn-outline btn-primary"
                                     : ""
                             }
@@ -102,18 +94,23 @@ function NavBar() {
                 </ul>
             </div>
             <div className="navbar-end">
-                <button
-                    onClick={() => navigate("/signin")}
-                    className={
-                        location.pathname == "/signin"
-                            ? "btn btn-outline btn-primary"
-                            : ""
-                    }
-                >
-                    Đăng nhập
-                </button>
+                {isSignedIn ? (
+                    <UserButton afterSignOutUrl="/" />
+                ) : (
+                    <button
+                        onClick={() => navigate("/signin")}
+                        className={
+                            location.pathname === "/signin"
+                                ? "btn btn-outline btn-primary"
+                                : ""
+                        }
+                    >
+                        Đăng nhập
+                    </button>
+                )}
             </div>
         </div>
     );
 }
+
 export default NavBar;

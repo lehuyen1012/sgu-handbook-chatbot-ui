@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Spline from "@splinetool/react-spline";
 import TapeSection from "../components/TapeSection";
 import Footer from "../components/footer";
+import HowItWorks from "../components/HowItWorks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -41,6 +42,14 @@ function HomePage() {
             </div>
             <div className="w-full flex justify-center items-center pt-10">
                 <TapeSection />
+            </div>
+            <div className="w-full flex justify-center items-center pt-20">
+                <div className="text-center mb-16 mx-auto py-12 lg:py-24 px-4 sm:px-6 lg:pt-12 lg:px-8">
+                    <h2 className="font-bold text-3xl uppercase mb-4 text-[var(--light-blue)] px-4">
+                        Chatbot hoạt động như thế nào?
+                    </h2>
+                    <HowItWorks />
+                </div>
             </div>
             <div className="w-full flex justify-center items-center pt-10">
                 <Footer />

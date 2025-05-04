@@ -1,7 +1,7 @@
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
-import ScaleLoader from "react-spinners/ScaleLoader";
+import ClipLoader from "react-spinners/ClipLoader";
 import { TypeAnimation } from "react-type-animation";
 import sgu_img from "../assets/sgu_img.png";
 function ChatBot(props) {
@@ -16,6 +16,7 @@ function ChatBot(props) {
         "Bao nhiêu điểm thì học lực Xuất sắc?",
         "Bao nhiêu điểm thì học lực Giỏi?",
         "Bao nhiêu điểm thì học lực Khá?",
+
         "Điều kiện thực tập tốt nghiệp là gì?",
         "Điều kiện nào để được xét chuyển trường?",
         "Lệ phí cấp bảng điểm là bao nhiêu?",
@@ -79,7 +80,9 @@ function ChatBot(props) {
                             "start",
                             [
                                 result.answer,
-                                result?.source_documents ? result.source_documents : [],
+                                result?.source_documents
+                                    ? result.source_documents
+                                    : [],
                             ],
                         ],
                     ]);
@@ -108,20 +111,17 @@ function ChatBot(props) {
             SetChatHistory((prev) => [message, ...prev]);
 
             try {
-                const response = await fetch(
-                    API_URL,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "ngrok-skip-browser-warning": "69420",
-                            "Access-Control-Allow-Origin": "*",
-                        },
-                        body: JSON.stringify({
-                            question: message.toString(),
-                        }),
-                    }
-                );
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "69420",
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                    body: JSON.stringify({
+                        question: message.toString(),
+                    }),
+                });
 
                 const result = await response.json();
 
@@ -169,7 +169,9 @@ function ChatBot(props) {
                 <div className="menu p-4 w-full min-h-full bg-gray-50 text-base-content rounded-2xl mt-3 overflow-auto scroll-y-auto max-h-[80vh]">
                     {/* Sidebar content here */}
                     <ul className="menu text-sm">
-                        <h2 className="font-bold mb-2 text-black">Lịch sử trò chuyện</h2>
+                        <h2 className="font-bold mb-2 text-black">
+                            Lịch sử trò chuyện
+                        </h2>
                         {chatHistory.length == 0 ? (
                             <p className="text-sm text-gray-500 ">
                                 Hiện chưa có cuộc trò chuyện nào
@@ -181,7 +183,9 @@ function ChatBot(props) {
                             <li key={i}>
                                 <p>
                                     <FontAwesomeIcon icon={faMessage} />
-                                    {mess.length < 20 ? mess : mess.slice(0, 20) + "..."}
+                                    {mess.length < 20
+                                        ? mess
+                                        : mess.slice(0, 20) + "..."}
                                 </p>
                             </li>
                         ))}
@@ -223,29 +227,43 @@ function ChatBot(props) {
 
             <div className={"flex justify-center h-[80vh] "}>
                 {/* Put this part before </body> tag */}
-                <input type="checkbox" id="my_modal_6" className="modal-toggle" />
+                <input
+                    type="checkbox"
+                    id="my_modal_6"
+                    className="modal-toggle"
+                />
                 <div className="modal">
                     <div className="modal-box">
                         <h3 className="font-bold text-lg">{reference.title}</h3>{" "}
-                        <p className="font-normal text-sm">Nguồn: {reference.source}</p>
+                        <p className="font-normal text-sm">
+                            Nguồn: {reference.source}
+                        </p>
                         <p className="py-4 text-sm">{reference.text}</p>
-                        {reference.keywords && reference.keywords.length > 0 && (
-                            <div className="my-2">
-                                <p className="font-semibold text-sm">Từ khóa:</p>
-                                <ul className="list-disc list-inside text-sm">
-                                    {reference.keywords.map((keyword, index) => (
-                                        <li key={index}>{keyword}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
+                        {reference.keywords &&
+                            reference.keywords.length > 0 && (
+                                <div className="my-2">
+                                    <p className="font-semibold text-sm">
+                                        Từ khóa:
+                                    </p>
+                                    <ul className="list-disc list-inside text-sm">
+                                        {reference.keywords.map(
+                                            (keyword, index) => (
+                                                <li key={index}>{keyword}</li>
+                                            )
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
                         <p className="link link-primary truncate">
                             <a href={reference.url} target="_blank">
                                 {reference.url}
                             </a>
                         </p>
                         <div className="modal-action">
-                            <label htmlFor="my_modal_6" className="btn btn-error">
+                            <label
+                                htmlFor="my_modal_6"
+                                className="btn btn-error"
+                            >
                                 ĐÓNG
                             </label>
                         </div>
@@ -262,10 +280,16 @@ function ChatBot(props) {
                 >
                     {dataChat.map((dataMessages, i) =>
                         dataMessages[0] === "start" ? (
-                            <div className="chat chat-start drop-shadow-md mt-3 ml-3" key={i}>
+                            <div
+                                className="chat chat-start drop-shadow-md mt-3 ml-3"
+                                key={i}
+                            >
                                 <div className="chat-image avatar">
                                     <div className="w-10 rounded-full border-2 border-[var(--light-blue)]">
-                                        <img className="scale-150" src={sgu_img} />
+                                        <img
+                                            className="scale-150"
+                                            src={sgu_img}
+                                        />
                                     </div>
                                 </div>
                                 <div className="chat-bubble chat-bubble-info colo break-words bg-[#f5f5f5]">
@@ -292,24 +316,31 @@ function ChatBot(props) {
                                         // wrapper="span"
                                         speed={100}
                                     />
-                                    {i !== 0 && dataMessages[1][1]?.length > 0 && (
-                                        <>
-                                            <div className="divider m-0"></div>
-                                            <p className="font-semibold text-xs">
-                                                Tham khảo:{" "}
-                                                {dataMessages[1][1].map((source, index) => (
-                                                    <label
-                                                        htmlFor="my_modal_6"
-                                                        className="kbd kbd-xs mr-1 hover:bg-sky-300 cursor-pointer"
-                                                        onClick={() => handleReferenceClick(source)}
-                                                        key={index}
-                                                    >
-                                                        {source.title}
-                                                    </label>
-                                                ))}
-                                            </p>
-                                        </>
-                                    )}
+                                    {i !== 0 &&
+                                        dataMessages[1][1]?.length > 0 && (
+                                            <>
+                                                <div className="divider m-0"></div>
+                                                <p className="font-semibold text-xs">
+                                                    Tham khảo:{" "}
+                                                    {dataMessages[1][1].map(
+                                                        (source, index) => (
+                                                            <label
+                                                                htmlFor="my_modal_6"
+                                                                className="kbd kbd-xs mr-1 hover:bg-sky-300 cursor-pointer"
+                                                                onClick={() =>
+                                                                    handleReferenceClick(
+                                                                        source
+                                                                    )
+                                                                }
+                                                                key={index}
+                                                            >
+                                                                {source.title}
+                                                            </label>
+                                                        )
+                                                    )}
+                                                </p>
+                                            </>
+                                        )}
                                 </div>
                             </div>
                         ) : (
@@ -317,7 +348,8 @@ function ChatBot(props) {
                                 <div
                                     className="chat-bubble shadow-xl chat-bubble-primary text-white"
                                     style={{
-                                        background: "linear-gradient(to bottom, #06b6d4, #3b82f6)",
+                                        background:
+                                            "linear-gradient(to bottom, #06b6d4, #3b82f6)",
                                     }}
                                 >
                                     {dataMessages[1][0]}
@@ -339,15 +371,21 @@ function ChatBot(props) {
                                 </div>
                             </div>
                             <div className="chat-bubble chat-bubble-info">
-                                <ScaleLoader
-                                    color="#000000"
-                                    loading={true}
-                                    height={10}
-                                    width={10}
-                                    aria-label="Loading Spinner"
-                                    data-testid="loader"
-                                />
-                                <p className="text-xs font-medium">{timeOfRequest + "/60s"}</p>
+                                <div className="flex items-center gap-2">
+                                    <ClipLoader
+                                        color="#000000"
+                                        loading={true}
+                                        size={18}
+                                        aria-label="Loading Spinner"
+                                        data-testid="loader"
+                                    />
+                                    <p className="text-xs font-medium">
+                                        Chờ chatbot một xíu nha...
+                                    </p>
+                                </div>
+                                <p className="text-xs font-medium mt-2">
+                                    {timeOfRequest + "/60s"}
+                                </p>
                             </div>
                         </div>
                     ) : (
@@ -387,8 +425,9 @@ function ChatBot(props) {
                             </svg>
                         </button>
                         <p className=" text-xs col-start-1 col-end-12 text-justify p-1">
-                            <b>Lưu ý: </b>Mô hình có thể đưa ra câu trả lời không chính xác ở
-                            một số trường hợp, vì vậy hãy luôn kiểm chứng thông tin bạn nhé!
+                            <b>Lưu ý: </b>Mô hình có thể đưa ra câu trả lời
+                            không chính xác ở một số trường hợp, vì vậy hãy luôn
+                            kiểm chứng thông tin bạn nhé!
                         </p>
                     </div>
                 </div>

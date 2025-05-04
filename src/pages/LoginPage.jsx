@@ -98,7 +98,7 @@ const LoginPage = () => {
 
                         <button
                             type="submit"
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md text-sm py-3 mt-6 transition-colors"
+                            className="!bg-[var(--light-blue)]  text-white font-medium rounded-md text-sm py-3 mt-6 transition-colors"
                         >
                             Đăng nhập
                         </button>
