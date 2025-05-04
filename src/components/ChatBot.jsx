@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { TypeAnimation } from "react-type-animation";
 import sgu_img from "../assets/sgu_img.png";
+import Info from "./Info";
+
 function ChatBot(props) {
     const messagesEndRef = useRef(null);
     const [timeOfRequest, SetTimeOfRequest] = useState(0);
@@ -12,18 +14,11 @@ function ChatBot(props) {
     const API_URL = "https://5e81-34-81-163-149.ngrok-free.app/api/ask";
 
     const commonQuestions = [
-        "Điều kiện nhận học bổng?",
-        "Bao nhiêu điểm thì học lực Xuất sắc?",
-        "Bao nhiêu điểm thì học lực Giỏi?",
-        "Bao nhiêu điểm thì học lực Khá?",
-
-        "Điều kiện thực tập tốt nghiệp là gì?",
-        "Điều kiện nào để được xét chuyển trường?",
-        "Lệ phí cấp bảng điểm là bao nhiêu?",
-        "Nếu điểm thi kết thúc học phần < 4 thì như thế nào?",
-        "Phí cấp lại thẻ sinh viên khi bị mất là bao nhiêu?",
-        "Để đạt loại tốt điểm rèn luyện cần bao nhiêu điểm?",
-        "Nếu sinh viên không đạt ở một học phần, phải làm gì?",
+        "Điều kiện để sinh viênviên nhận học bổng?",
+        "Học phí ngành công nghệ thông tin?",
+        "Quy trình xét tốt nghiệp như thế nào?",
+        "Các ngành học tại trường là gì?",
+        "Điều kiện để sinh viên được miễn học phí?",
     ];
     let [isLoading, SetIsLoad] = useState(false);
     let [isGen, SetIsGen] = useState(false);
@@ -166,30 +161,8 @@ function ChatBot(props) {
     return (
         <div className=" h-[85vh] w-full">
             <div className="hidden lg:block lg:w-[30%] xl:w-[25%] 2xl:w-[20%]   drawer-side absolute left-3 mt-2 drop-shadow-md px-10">
-                <div className="menu p-4 w-full min-h-full bg-gray-50 text-base-content rounded-2xl mt-3 overflow-auto scroll-y-auto max-h-[80vh]">
-                    {/* Sidebar content here */}
-                    <ul className="menu text-sm">
-                        <h2 className="font-bold mb-2 text-black">
-                            Lịch sử trò chuyện
-                        </h2>
-                        {chatHistory.length == 0 ? (
-                            <p className="text-sm text-gray-500 ">
-                                Hiện chưa có cuộc trò chuyện nào
-                            </p>
-                        ) : (
-                            ""
-                        )}
-                        {chatHistory.map((mess, i) => (
-                            <li key={i}>
-                                <p>
-                                    <FontAwesomeIcon icon={faMessage} />
-                                    {mess.length < 20
-                                        ? mess
-                                        : mess.slice(0, 20) + "..."}
-                                </p>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="menu p-4 w-full min-h-full bg-gray-50 text-base-content rounded-2xl mt-3 overflow-auto scroll-y-auto max-h-[80vh] flex flex-col">
+                    <Info />
                 </div>
             </div>
 
